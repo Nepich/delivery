@@ -17,7 +17,34 @@ dependencies = [
     "grpcio-tools (>=1.70.0,<2.0.0)"
 ]
 
+[tool.poetry]
+packages = [
+    { include= "api" },
+    { include= "core" },
+    { include= "infrastructure" },
+    { include= "tests" },
+]
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.5"
+
+[tool.pytest.ini_options]
+minversion = "8.3"
+addopts = " -v "
+python_classes = [
+    "*Should"
+]
+python_files = [
+    "*_should.py"
+]
+python_functions = [
+    "be_",
+    "not_be_",
+]
+testpaths = [
+    "tests"
+]
