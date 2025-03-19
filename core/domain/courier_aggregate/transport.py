@@ -6,9 +6,13 @@ from core.domain.shared_kernel.location import Location
 
 @dataclass
 class Transport:
-    id: UUID = field(init=False, default_factory=uuid4)
+    __id: UUID = field(init=False, default_factory=uuid4)
     name: str
     speed: int
+    
+    @property
+    def id(self):
+        return self.__id
     
     def __post_init__(self):
         if not isinstance(self.name, str):
@@ -21,7 +25,7 @@ class Transport:
             raise ValueError("speed could not be less then 1 or greater then 3")
     
     def __eq__(self, other_transport: "Transport"):
-        return self.id == other_transport.id
+        return self.__id == other_transport.id
     
     def move(self, current: Location, destination: Location) -> Location:
         if not (isinstance(current, Location) and isinstance(destination, Location)):
