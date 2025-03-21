@@ -39,11 +39,11 @@ python_classes = [
     "*Should"
 ]
 python_files = [
-    "*_should.py"
+    "*_tests.py"
 ]
 python_functions = [
-    "be_",
-    "not_be_",
+    "be_*",
+    "not_be_*",
 ]
 testpaths = [
     "tests"
