@@ -736,6 +736,18 @@ anyio = ">=3.6.2,<5"
 full = ["httpx (>=0.27.0,<0.29.0)", "itsdangerous", "jinja2", "python-multipart (>=0.0.18)", "pyyaml"]
 
 [[package]]
+name = "that-depends"
+version = "2.2.0"
+description = "Simple Dependency Injection framework"
+optional = false
+python-versions = "<4,>=3.10"
+groups = ["main"]
+files = [
+    {file = "that_depends-2.2.0-py3-none-any.whl", hash = "sha256:36a5b7ff8859955f81982a6aee03357b825599409960573ef1e3d64ba7ac3801"},
+    {file = "that_depends-2.2.0.tar.gz", hash = "sha256:bc7871e54f6050a19c0f4cabc07ee893ce5585b416ff604b09de8006f491c418"},
+]
+
+[[package]]
 name = "typing-extensions"
 version = "4.12.2"
 description = "Backported and Experimental Type Hints for Python 3.8+"
@@ -768,5 +780,5 @@ standard = ["colorama (>=0.4)", "httptools (>=0.6.3)", "python-dotenv (>=0.13)",
 
 [metadata]
 lock-version = "2.1"
-python-versions = ">=3.12"
-content-hash = "f08ac973ec63cad55043be7f862b29e93067661780ea6976de02abc58e601092"
+python-versions = ">=3.12,<4"
+content-hash = "9005d8abcff6d7a4432380149aa76cbdcbf1337d642f4f26fa0c92fa2a99b7ca"

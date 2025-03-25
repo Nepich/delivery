@@ -6,7 +6,7 @@ authors = [
     {name = "NEPOCHATYKH Dmitry A",email = "dmitry.nepochatykh@raiffeisen.ru"}
 ]
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.12,<4"
 dependencies = [
     "fastapi (>=0.115.11,<0.116.0)",
     "uvicorn (>=0.34.0,<0.35.0)",
@@ -14,7 +14,8 @@ dependencies = [
     "pydantic-settings (>=2.8.1,<3.0.0)",
     "pydantic (>=2.10.6,<3.0.0)",
     "grpcio (>=1.70.0,<2.0.0)",
-    "grpcio-tools (>=1.70.0,<2.0.0)"
+    "grpcio-tools (>=1.70.0,<2.0.0)",
+    "that-depends (>=2.2.0,<3.0.0)"
 ]
 
 [tool.poetry]
