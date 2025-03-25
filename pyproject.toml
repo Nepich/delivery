@@ -15,7 +15,9 @@ dependencies = [
     "pydantic (>=2.10.6,<3.0.0)",
     "grpcio (>=1.70.0,<2.0.0)",
     "grpcio-tools (>=1.70.0,<2.0.0)",
-    "that-depends (>=2.2.0,<3.0.0)"
+    "that-depends (>=2.2.0,<3.0.0)",
+    "alembic (>=1.15.1,<2.0.0)",
+    "asyncpg (>=0.30.0,<0.31.0)"
 ]
 
 [tool.poetry]

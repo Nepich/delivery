@@ -11,26 +11,26 @@ from core.domain.shared_kernel.location import Location
 @dataclass
 class Courier:
     name: str
-    __transport: Transport
-    __location: Location
-    __status: CourierStatus
-    __id: UUID
+    _transport: Transport
+    _location: Location
+    _status: CourierStatus
+    _id: UUID
     
     @property
     def transport(self):
-        return self.__transport
+        return self._transport
 
     @property
     def id(self):
-        return self.__id
+        return self._id
         
     @property
     def location(self):
-        return self.__location
+        return self._location
     
     @property
     def status(self):
-        return self.__status
+        return self._status
     
     def __init__(
         self, 
@@ -50,38 +50,36 @@ class Courier:
                 "name, transport_name, transport_speed, location should be not empty or empty string"
                 )
         
-        self.__id = uuid4()
+        self._id = uuid4()
         self.name = name
-        self.__transport = Transport(name=transport_name, speed=transport_speed)
-        self.__location = location
-        self.__status = CourierStatus.FREE()
+        self._transport = Transport(name=transport_name, speed=transport_speed)
+        self._location = location
+        self._status = CourierStatus.FREE
 
     def __eq__(self, other_courier: "Courier"):
-        return self.__id == other_courier.id
+        return self._id == other_courier.id
 
     def set_busy(self):
-        busy = CourierStatus.BUSY()
-        if self.__status == busy:
+        if self._status == CourierStatus.BUSY:
             raise Exception("this courier is already busy")
-        self.__status = busy
+        self._status = CourierStatus.BUSY
 
     def set_free(self):
-        free = CourierStatus.FREE()
-        if self.__status == free:
+        if self._status == CourierStatus.FREE:
             raise Exception("this courier is already free")
-        self.__status = free
+        self._status = CourierStatus.FREE
         
     def move(self, destination: Location):
         if not isinstance(destination, Location):
             raise TypeError("destination should be type of Location")
-        new_location = self.__transport.move(
+        new_location = self._transport.move(
             current=self.location, destination=destination
             )
-        self.__location = new_location
+        self._location = new_location
         
     def time_to_location(self, destination: Location) -> float:
         if not isinstance(destination, Location):
             raise TypeError("destination should be type of Location")        
         
-        distance = self.__location.distance(destination=destination)
-        return distance / self.__transport.speed
+        distance = self._location.distance(destination=destination)
+        return distance / self._transport.speed

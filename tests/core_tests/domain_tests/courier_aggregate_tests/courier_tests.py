@@ -70,7 +70,7 @@ class CourierShould:
     )
     def be_set_busy_correct(self, courier: Courier):
         courier.set_busy()
-        assert courier.status == CourierStatus.BUSY()
+        assert courier.status == CourierStatus.BUSY
         
     @pytest.mark.parametrize(
         "courier,error",
@@ -92,7 +92,7 @@ class CourierShould:
     def be_set_free_correct(self, courier: Courier):
         courier.set_busy()
         courier.set_free()
-        assert courier.status == CourierStatus.FREE()
+        assert courier.status == CourierStatus.FREE
         
     @pytest.mark.parametrize(
         "courier,error",
@@ -123,7 +123,7 @@ class CourierShould:
     )
     def not_be_moved(self, courier: Courier, destination: Location, error):
         with pytest.raises(error):
-            courier.move()
+            courier.move(destination=destination)
             
     @pytest.mark.parametrize(
         "courier,destination, time_to_location",
