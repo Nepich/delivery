@@ -14,7 +14,7 @@ mapper_registry = registry()
 metadata_obj = MetaData()
 
 order_table = Table(
-    "order",
+    "orders",
     metadata_obj,
     Column("id", Uuid, primary_key=True),
     Column("location_x", Integer),
@@ -24,7 +24,7 @@ order_table = Table(
 )
 
 courier_table = Table(
-    "courier",
+    "couriers",
     metadata_obj,
     Column("id", Uuid, primary_key=True),
     Column("location_x", Integer),
@@ -34,12 +34,12 @@ courier_table = Table(
 )
 
 transport_table = Table(
-    "transport",
+    "transports",
     metadata_obj,
     Column("id", Uuid, primary_key=True),
     Column("speed", Integer),
     Column("name", String(100)),
-    Column("courier_id", Uuid, ForeignKey("courier.id")),
+    Column("courier_id", Uuid, ForeignKey("couriers.id")),
 )
 
 
@@ -50,7 +50,7 @@ mapper_registry.map_imperatively(
         "_id": order_table.c.id,
         "_location": composite(Location, order_table.c.location_x, order_table.c.location_y),
         "_status": order_table.c.status,
-        "_courier_id": order_table.c.status,
+        "_courier_id": order_table.c.courier_id
     },
 )
 
