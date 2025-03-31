@@ -23,14 +23,14 @@ class OrderRepository:
     async def update_order(self, order: Order) -> None:
         async with async_session() as session:
             stmt = (
-                update(Order)
+                update(order_table)
                 .where(order_table.c.id == order.id)
                 .values(
                     id=order.id,
                     location_x=order.location.x,
                     location_y=order.location.y,
                     status=order.status,
-                    courier_id=order.courier_id,
+                    courier_id=order.courier_id
                     )
             )
             await session.execute(stmt)
@@ -38,20 +38,10 @@ class OrderRepository:
         
     async def add_order(self, order: Order) -> None:
         async with async_session() as session, session.begin():
-            stmt = (
-                insert(Order)
-                .values(
-                    id = order.id,
-                    location_x = order.location.x,
-                    location_y = order.location.y,
-                    status = order.status,
-                    courier_id=order.courier_id,
-                    )
-            )
-            await session.execute(stmt)
+            session.add(order)
             await session.commit()
         
-    async def get_new_orders(self) -> list[Order]:
+    async def get_new_order(self) -> Order:
         async with async_session() as session:
             stmt = (
                 select(Order)

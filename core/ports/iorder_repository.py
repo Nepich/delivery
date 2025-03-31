@@ -15,7 +15,7 @@ class IOrderRepository(Protocol):
     async def add_order(self, order: Order) -> None:
         ...
         
-    async def get_new_orders(self) -> list[Order]:
+    async def get_new_order(self) -> Order:
         ...
         
     async def get_assigned_orders(self) -> list[Order]:

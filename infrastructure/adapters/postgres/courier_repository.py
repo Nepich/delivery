@@ -16,6 +16,7 @@ class CourierRepository:
         async with async_session() as session:
             stmt = (
                 select(Courier)
+                .options(joinedload(Courier._transport))
                 .where(courier_table.c.id == courier_id)
             )
             result = await session.execute(stmt)
@@ -24,7 +25,7 @@ class CourierRepository:
     async def update_courier(self, courier: Courier) -> None:
         async with async_session() as session:
             stmt = (
-                update(Courier)
+                update(courier_table)
                 .where(courier_table.c.id == courier.id)
                 .values(
                     location_x = courier.location.x,
@@ -37,27 +38,7 @@ class CourierRepository:
         
     async def add_courier(self, courier: Courier) -> None:
         async with async_session() as session, session.begin():
-            stmt1 = (
-                insert(Courier)
-                .values(
-                    id = courier.id,
-                    location_x = courier.location.x,
-                    location_y = courier.location.y,
-                    status = courier.status,
-                    name = courier.name
-                    )
-            )
-            stmt2 = (
-                insert(Transport)
-                .values(
-                    id = courier.transport.id,
-                    name = courier.transport.name,
-                    speed = courier.transport.speed,
-                    courier_id = courier.id
-                )
-            )
-            await session.execute(stmt1)
-            await session.execute(stmt2)
+            session.add_all([courier, courier.transport])
             await session.commit()
         
     async def get_free_couriers(self) -> list[Courier]:
