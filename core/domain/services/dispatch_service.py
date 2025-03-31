@@ -18,10 +18,10 @@ class DispatchService:
             and all(map(lambda x: isinstance(x, Courier), couriers))
             ):
             raise TypeError("order should be type of order")
-        if order.status != OrderStatus.CREATED():
+        if order.status != OrderStatus.CREATED:
             raise Exception("only order with status created can be dispatched")
 
-        free_status = CourierStatus.FREE()
+        free_status = CourierStatus.FREE
         best_match = math.inf
         best_courier = None
         for courier in couriers:

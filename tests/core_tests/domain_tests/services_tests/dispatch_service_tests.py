@@ -28,8 +28,8 @@ class DispatchServiceShould:
         best_courier = self.service.dispatch(order=order, couriers=couriers)
         assert best_courier.name == "Fedor"
         assert best_courier.transport.name == "audi"
-        assert best_courier.status == CourierStatus.BUSY()
-        assert order.status == OrderStatus.ASSIGNED()
+        assert best_courier.status == CourierStatus.BUSY
+        assert order.status == OrderStatus.ASSIGNED
         
     @pytest.mark.parametrize(
         "order,couriers,error",

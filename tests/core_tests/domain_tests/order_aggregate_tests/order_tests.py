@@ -24,7 +24,7 @@ class OrderShould:
             )
         assert isinstance(order, Order)
         assert order.id == id
-        assert order.status == OrderStatus.CREATED()
+        assert order.status == OrderStatus.CREATED
         assert order.courier_id == None
         assert order.location == location
         assert isinstance(order.id, UUID)
@@ -60,7 +60,7 @@ class OrderShould:
         courier_id: UUID
         ):
         order.assign(courier_id=courier_id)
-        assert order.status == OrderStatus.ASSIGNED()
+        assert order.status == OrderStatus.ASSIGNED
         
     @pytest.mark.parametrize(
         "order,courier_id,error",
@@ -92,7 +92,7 @@ class OrderShould:
         ):
         order.assign(courier_id=courier_id)
         order.complete()
-        assert order.status == OrderStatus.COMPLETED()
+        assert order.status == OrderStatus.COMPLETED
         
     @pytest.mark.parametrize(
         "order,error",

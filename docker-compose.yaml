@@ -1,0 +1,30 @@
+services:
+
+  delivery:
+    build:
+      context: .
+    volumes:
+      - ./:/app/
+    env_file:
+      - .env
+    restart: always
+    container_name: delivery
+    command: "poetry run uvicorn api.fastapi_server:app --host 0.0.0.0 --port 8000 --reload"
+    ports:
+      - 8888:8000
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16.3-alpine3.20
+    platform: linux/amd64
+    env_file:
+      - .env
+    container_name: db
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  db_data:
