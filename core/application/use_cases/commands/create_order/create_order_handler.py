@@ -19,7 +19,7 @@ class CreateOrderHandler:
                     y=randint(1,10),
                 )
             )
-        await self.__repo.add_order(order=order)
+        await self.repo.add_order(order=order)
         
         return True
     

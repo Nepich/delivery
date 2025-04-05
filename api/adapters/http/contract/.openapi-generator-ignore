@@ -1,0 +1,11 @@
+Dockerfile
+docker-compose.yaml
+.flake8
+.gitignore
+pyproject.toml
+README.md
+requirements.txt
+setup.cfg
+.openapi-generator/**
+tests/*
+src/openapi_server/security_api.py
