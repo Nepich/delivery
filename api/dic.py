@@ -8,6 +8,7 @@ from core.application.use_cases.commands.move_couriers.move_couriers_handler imp
 from core.application.use_cases.queries.get_busy_couriers.get_busy_couriers_handler import GetBusyCouriersHandler
 from core.application.use_cases.queries.get_incompleted_orders.get_incompleted_orders_handler import GetIncompletedOrdersHandler
 from core.domain.services.dispatch_service import DispatchService
+from infrastructure.adapters.grpc.geo_grpc import GeoGrpc
 from infrastructure.adapters.postgres.courier_repository import CourierRepository
 from infrastructure.adapters.postgres.order_repository import OrderRepository
 from infrastructure.adapters.postgres.uow import UnitOfWork
@@ -29,8 +30,14 @@ class DIContainer(BaseContainer):
         order_repo=order_repository,
         dispatch_service=dispatch_service
         )
+    geo_grpc = providers.Factory(
+        GeoGrpc,
+        target="localhost:5004"
+    )
     create_order_handler = providers.Factory(
-        CreateOrderHandler, repo=order_repository
+        CreateOrderHandler, 
+        repo=order_repository,
+        geo_grpc=geo_grpc
         )
     move_courier_handler = providers.Factory(
         MoveCourierHandler,
