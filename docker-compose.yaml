@@ -15,6 +15,19 @@ services:
     depends_on:
       - db
 
+  consumer:
+    build:
+      context: .
+    volumes:
+      - ./:/app/
+    env_file:
+      - .env
+    restart: always
+    container_name: delivery_consumer
+    command: "poetry run python api/adapters/kafka/main.py"
+    depends_on:
+      - db
+
   db:
     image: postgres:16.3-alpine3.20
     platform: linux/amd64
@@ -24,7 +37,7 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5436:5432"
 
 volumes:
   db_data:
