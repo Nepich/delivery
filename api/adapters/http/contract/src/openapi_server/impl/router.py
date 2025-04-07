@@ -22,9 +22,9 @@ class Router(BaseDefaultApi):
         """Позволяет создать заказ с целью тестирования"""
         fake_data = {
             "basket_id": uuid4(),
-            "street_name": "some_ name"
+            "street": "some_ name"
             }
-        command = CreateOrderCommand(**fake_data).model_validate()
+        command = CreateOrderCommand(**fake_data)
         return await self.mediator.notify(command=command)
 
 
