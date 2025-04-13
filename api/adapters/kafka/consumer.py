@@ -14,9 +14,8 @@ class Consumer:
         self, 
         topics: list[str], 
         servers: list[str], 
-        mediator: Mediator = Provide[DIContainer.mediator.sync_resolve()]
+        mediator: Mediator = Provide[DIContainer.mediator]
         ):
-        print("==============", servers, "================", sep="\n")
         self.consumer = KafkaConsumer(
             bootstrap_servers=servers,
             value_deserializer=lambda m: json.loads(m.decode('ascii'))
@@ -26,11 +25,9 @@ class Consumer:
 
     def process(self):
         self.consumer.subscribe(*self.topics)
-        print(self.consumer.subscription())
         while True:
             for msg in self.consumer:
                 event = BasketConfirmedIntegrationEvent(**msg)
-                print(event)
                 command = CreateOrderCommand(
                     basket_id=event.basketId,
                     street=event.address.street

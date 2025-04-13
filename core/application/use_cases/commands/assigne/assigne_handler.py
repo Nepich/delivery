@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Protocol
 
 from core.application.use_cases.commands.assigne.assigne_command import AssigneCommand
 from core.domain.services.idispatch_service import IDispatchService
