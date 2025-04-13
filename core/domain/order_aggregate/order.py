@@ -1,6 +1,8 @@
+from collections import deque
 from dataclasses import dataclass
 from uuid import UUID
 
+from core.domain.order_aggregate.domain_events.order_finished_event import OrderFinishedEvent
 from core.domain.order_aggregate.order_status import OrderStatus
 from core.domain.shared_kernel.location import Location
 
@@ -11,6 +13,7 @@ class Order:
     _location: Location
     _status: OrderStatus
     _courier_id: UUID | None
+    __events: deque[OrderFinishedEvent]
 
     @property
     def id(self):
@@ -57,3 +60,15 @@ class Order:
             raise Exception("this order hasn't been assigned yet")
         
         self._status = OrderStatus.COMPLETED
+        self.__raise_domain_event(
+            OrderFinishedEvent(order_id=self._id, status=self._status)
+            )
+        
+    def __raise_domain_event(self, event: OrderFinishedEvent) -> None:
+        self.__events.append(event)
+        
+    def clear_domain_events(self) -> None:
+        self.__events.clear()
+        
+    def get_domain_events(self) -> deque[OrderFinishedEvent]:
+        return self.__events
