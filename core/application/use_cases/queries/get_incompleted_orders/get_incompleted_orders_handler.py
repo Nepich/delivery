@@ -1,12 +1,14 @@
 from sqlalchemy import text
+from sqlalchemy.ext.asyncio import async_sessionmaker
 from core.application.use_cases.queries.get_incompleted_orders.get_incompleted_orders_query import GetIncompletedOrdersQuery
 from core.application.use_cases.queries.get_incompleted_orders.get_incompleted_orders_response import GetIncompletedOrdersResponse, LocationResponse
-from infrastructure.adapters.postgres.session import async_session
         
         
 class GetIncompletedOrdersHandler:
+    session_maker: async_sessionmaker
+    
     async def handle(self, query: GetIncompletedOrdersQuery) -> list[GetIncompletedOrdersResponse]:
-        async with async_session() as session:
+        async with self.session_maker() as session:
             stmt = text(
                 """
                 SELECT 

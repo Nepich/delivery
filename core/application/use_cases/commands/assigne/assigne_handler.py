@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Protocol
 
 from core.application.use_cases.commands.assigne.assigne_command import AssigneCommand
 from core.domain.services.idispatch_service import IDispatchService
@@ -26,6 +25,9 @@ class AssigneHandler:
         except Exception:
             return False
         
-        await self.uow.assigne_courier_to_order(order=order, courier=best_courier)
+        async with self.uow() as session:
+            await self.order_repo.update_order(session=session, order=order)
+            await self.courier_repo.update_courier(session=session, courier=best_courier)
+
         return True
         

@@ -1,18 +1,37 @@
+from contextlib import asynccontextmanager
 from dataclasses import dataclass
-from core.domain.courier_aggregate.courier import Courier
-from core.domain.order_aggregate.order import Order
-from infrastructure.adapters.postgres.session import async_session
-from infrastructure.adapters.postgres.courier_repository import CourierRepository
-from infrastructure.adapters.postgres.order_repository import OrderRepository
+from sqlalchemy import insert
+from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
+from infrastructure.adapters.postgres.mappings import event_table
 
 
-@dataclass(slots=True, frozen=True)
+@dataclass
 class UnitOfWork:
-    courier_repo: CourierRepository
-    order_repo: OrderRepository
+    session_maker: async_sessionmaker
     
-    async def assigne_courier_to_order(self, courier: Courier, order: Order):
-        async with async_session() as session, session.begin():
-            await self.order_repo.update_order(order=order)
-            await self.courier_repo.update_courier(courier=courier)
+    @asynccontextmanager
+    async def __call__(self):
+        session: AsyncSession = self.session_maker()
+        try:
+            yield session
+            await session.flush()
+            await self.__save_events_in_outbox(session=session)
             await session.commit()
+        except Exception as ex:
+            print(ex)
+            await session.rollback()
+        finally:
+            await session.close()
+    
+    @staticmethod
+    async def __save_events_in_outbox(session: AsyncSession):
+        registry = session.identity_map.values()
+        events = []
+
+        for aggregate in registry:
+            if aggregate.events:
+                events.extend([event.as_dict() for event in aggregate.events])
+        
+        if events:
+            stmt = insert(event_table).values(events)
+            await session.execute(stmt)

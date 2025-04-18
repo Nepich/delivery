@@ -1,6 +1,5 @@
-from sqlalchemy import Column, ForeignKey, Integer, MetaData, Table, Enum, Uuid, String
-from sqlalchemy.ext.asyncio import AsyncAttrs
-from sqlalchemy.orm import registry, composite, relationship, DeclarativeBase
+from sqlalchemy import JSON, Column, ForeignKey, Integer, MetaData, Table, Enum, Uuid, String, DateTime, func
+from sqlalchemy.orm import registry, composite, relationship
 
 from core.domain.courier_aggregate.courier import Courier
 from core.domain.courier_aggregate.courier_status import CourierStatus
@@ -8,7 +7,7 @@ from core.domain.courier_aggregate.transport import Transport
 from core.domain.order_aggregate.order import Order
 from core.domain.order_aggregate.order_status import OrderStatus
 from core.domain.shared_kernel.location import Location
-
+from infrastructure.adapters.postgres.entities.event import Event
 
 mapper_registry = registry()
 metadata_obj = MetaData()
@@ -42,6 +41,16 @@ transport_table = Table(
     Column("courier_id", Uuid, ForeignKey("couriers.id")),
 )
 
+event_table = Table(
+    "events",
+    metadata_obj,
+    Column("id", Uuid, primary_key=True),
+    Column("event_type", String(100)),
+    Column("content", JSON),
+    Column("created_at", DateTime, server_default=func.now()),
+    Column("processed_at", DateTime, nullable=True)
+)
+
 
 mapper_registry.map_imperatively(
     Order,
@@ -71,4 +80,9 @@ mapper_registry.map_imperatively(
     properties={
         "_id": transport_table.c.id
     },
+)
+
+mapper_registry.map_imperatively(
+    Event,
+    event_table
 )

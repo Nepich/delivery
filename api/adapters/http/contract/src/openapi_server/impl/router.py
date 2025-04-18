@@ -1,6 +1,6 @@
 from typing import List
 from uuid import uuid4
-from that_depends import Provide, inject
+from that_depends import Provide
 from api.adapters.http.contract.src.openapi_server.apis.default_api_base import BaseDefaultApi
 from api.adapters.http.contract.src.openapi_server.models.courier import Courier
 from api.adapters.http.contract.src.openapi_server.models.order import Order
@@ -22,7 +22,7 @@ class Router(BaseDefaultApi):
         """Позволяет создать заказ с целью тестирования"""
         fake_data = {
             "basket_id": uuid4(),
-            "street": "some_ name"
+            "street": "some_name"
             }
         command = CreateOrderCommand(**fake_data)
         return await self.mediator.notify(command=command)
