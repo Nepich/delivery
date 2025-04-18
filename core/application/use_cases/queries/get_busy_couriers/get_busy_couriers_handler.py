@@ -1,12 +1,15 @@
 from sqlalchemy import text
+from sqlalchemy.ext.asyncio import async_sessionmaker
+
 from core.application.use_cases.queries.get_busy_couriers.get_busy_couriers_response import GetBusyCouriersResponse, LocationResponse
 from core.application.use_cases.queries.get_busy_couriers.get_busy_couriers_query import GetBusyCouriersQuery
-from infrastructure.adapters.postgres.session import async_session
         
         
 class GetBusyCouriersHandler:
+    session_maker: async_sessionmaker
+    
     async def handle(self, query: GetBusyCouriersQuery) -> list[GetBusyCouriersResponse]:
-        async with async_session() as session:
+        async with self.session_maker() as session:
             stmt = text(
                 """
                 SELECT 

@@ -9,7 +9,7 @@ services:
       - .env
     restart: always
     container_name: delivery
-    command: "poetry run uvicorn api.adapters.http.contract.src.openapi_server.main:app --host 0.0.0.0 --port 8000 --reload"
+    command: "poetry run python api/adapters/http/contract/src/openapi_server/main.py"
     ports:
       - 8888:8000
     depends_on:
@@ -25,6 +25,19 @@ services:
     restart: always
     container_name: delivery_consumer
     command: "poetry run python api/adapters/kafka/main.py"
+    depends_on:
+      - db
+
+  scheduler:
+    build:
+      context: .
+    volumes:
+      - ./:/app/
+    env_file:
+      - .env
+    restart: always
+    container_name: delivery_scheduler
+    command: "poetry run python api/adapters/scheduler/main.py"
     depends_on:
       - db
 

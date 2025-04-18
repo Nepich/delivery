@@ -20,7 +20,10 @@ class MoveCourierHandler:
             if order.location == courier.location:
                 order.complete()
                 courier.set_free()
-                await self.uow.move_courier(courier=courier, order=order)
+                async with self.uow() as session:
+                    await self.order_repo.update_order(session=session, order=order)
+                    await self.courier_repo.update_courier(session=session, courier=courier)
                 continue
             
-            await self.courier_repo.update_courier(courier=courier)
+            async with self.uow() as session:
+                await self.courier_repo.update_courier(session=session, courier=courier)

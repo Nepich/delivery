@@ -25,6 +25,9 @@ class AssigneHandler:
         except Exception:
             return False
         
-        await self.uow.assigne_courier_to_order(order=order, courier=best_courier)
+        async with self.uow() as session:
+            await self.order_repo.update_order(session=session, order=order)
+            await self.courier_repo.update_courier(session=session, courier=best_courier)
+
         return True
         

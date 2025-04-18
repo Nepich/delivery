@@ -5,12 +5,14 @@ from core.domain.order_aggregate.order import Order
 from core.ports.igeo_client import IGeoClient
 from core.ports.iorder_repository import IOrderRepository
 from infrastructure.adapters.grpc.out.geo_pb2 import GetGeolocationRequest
+from infrastructure.adapters.postgres.uow import UnitOfWork
 
 
 @dataclass(slots=True, frozen=True)
 class CreateOrderHandler:
     repo: IOrderRepository
     geo_client: IGeoClient
+    uow: UnitOfWork
     
     async def handle(self, command: CreateOrderCommand):
         location = self.geo_client.GetGeolocation(
@@ -20,9 +22,7 @@ class CreateOrderHandler:
             id=command.basket_id,
             location=location
             )
-        await self.repo.add_order(order=order)
+        async with self.uow() as session:
+            await self.repo.add_order(session=session, order=order)
         
         return True
-    
-    def __hash__(self):
-        return hash(self.__class__.__name__)

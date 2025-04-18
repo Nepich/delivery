@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
 
-@dataclass(frozen=True)
-class ICommand:
+@dataclass
+class Command:
     ...

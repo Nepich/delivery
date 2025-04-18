@@ -2,18 +2,19 @@ from collections import deque
 from dataclasses import dataclass
 from uuid import UUID
 
-from core.domain.order_aggregate.domain_events.order_finished_event import OrderFinishedEvent
+from core.domain.order_aggregate.domain_events.order_finished_event import OrderFinished
 from core.domain.order_aggregate.order_status import OrderStatus
 from core.domain.shared_kernel.location import Location
+from core.primitives.iaggregate import Aggregate
 
 
 @dataclass
-class Order:
+class Order(Aggregate):
     _id: UUID
     _location: Location
     _status: OrderStatus
     _courier_id: UUID | None
-    __events: deque[OrderFinishedEvent]
+    _events: list[OrderFinished]
 
     @property
     def id(self):
@@ -45,6 +46,9 @@ class Order:
     def __eq__(self, other_order: "Order"):
         return self._id == other_order.id
     
+    def __repr__(self):
+        return f"{self.id}, {self._location}, {self._status}, {self._courier_id}, {self._events}"
+    
     def assign(self, courier_id: UUID):
         if not isinstance(courier_id, UUID):
             raise TypeError("courier_id should be type of UUID")
@@ -61,14 +65,14 @@ class Order:
         
         self._status = OrderStatus.COMPLETED
         self.__raise_domain_event(
-            OrderFinishedEvent(order_id=self._id, status=self._status)
+            OrderFinished(order_id=self._id, status=self._status)
             )
         
-    def __raise_domain_event(self, event: OrderFinishedEvent) -> None:
-        self.__events.append(event)
+    def __raise_domain_event(self, event: OrderFinished) -> None:
+        self._events.append(event)
         
     def clear_domain_events(self) -> None:
-        self.__events.clear()
+        self._events.clear()
         
-    def get_domain_events(self) -> deque[OrderFinishedEvent]:
-        return self.__events
+    def get_domain_events(self) -> deque[OrderFinished]:
+        return self._events
